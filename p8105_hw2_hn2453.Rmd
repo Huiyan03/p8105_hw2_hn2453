@@ -79,7 +79,7 @@ nyc_sub |>
 
 ## problem 2
 
-Read and clean the Mr. Trash Wheel sheet. Specify the import sheet is "Mr. Trash Wheel", skip the first row due to the rows is non-data, define blank as na, convert variable names to reasonable variable names, omit rows that do not include dumpster-specific data(value is na), and round the number of sports balls to the nearest integer and converts the result to an integer variable.
+Read and clean the Mr. Trash Wheel sheet. Specify the import sheet is "Mr. Trash Wheel", skip the first row due to the rows is non-data, define blank as na, convert variable names to reasonable variable names, omit rows that do not include dumpster-specific data(value is na), round the number of sports balls to the nearest integer and converts the result to an integer variable, and remove 2 useless columns producing after import data.
 ```{r}
 mr_trash = 
   read_excel("data/202409 Trash Wheel Collection Data.xlsx", 
@@ -91,6 +91,7 @@ mr_trash =
   filter(!is.na(dumpster)) |>
   mutate(sports_balls = as.integer(round(sports_balls)))
   
+ mr_trash = mr_trash |> select(-x15,-x16)
  head(mr_trash)
 ```
 Use a similar process to import, clean, and organize the data for Professor Trash Wheel and Gwynnda.
@@ -117,5 +118,24 @@ gwy_trash =
   filter(!is.na(dumpster))
 
 head(gwy_trash)
+```
+
+Add an additional variable to note different trash wheel before combining these data sets.
+```{r}
+mr_trash = mr_trash |> mutate(wheel_name = "Mr. Trash Wheel")
+pro_trash = pro_trash |> mutate(wheel_name = "Professor Trash Wheel")
+gwy_trash = gwy_trash |> mutate(wheel_name = "Gwynnda Trash Wheel")
+
+```
+
+Combining these data sets.
+```{r}
+mr_trash$year = as.numeric(mr_trash$year)
+trash_wheel = bind_rows(mr_trash,pro_trash,gwy_trash)
+trash_wheel
+```
+
+```{r}
+
 ```
 
