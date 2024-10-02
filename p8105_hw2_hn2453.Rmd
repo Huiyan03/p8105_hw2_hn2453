@@ -1,0 +1,80 @@
+---
+title: "p8105_hw2_hn2453"
+author: "Huiyan Ni"
+date: "2024-10-02"
+output: github_document
+---
+
+## problem 1
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+Import the data related to each entrance and exit for each subway station in NYC.
+Read and clean the data; retain line, station, name, station latitude / longitude, routes served, entry, vending, entrance type, and ADA compliance.
+```{r}
+nyc_sub = read_csv("data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
+                   col_types = cols(Route8 = "c", Route9 = "c", Route10 = "c", Route11 = "c"))
+
+nyc_sub = nyc_sub |> janitor::clean_names() |> 
+  select(
+    line, station_name, station_latitude, station_longitude, 
+    starts_with("route"), entry, exit_only, vending, entrance_type, 
+    ada) |> 
+  mutate(entry = ifelse(entry == "YES", TRUE, FALSE))
+
+```
+After importing original dataset, making route variables to character variable, selecting line, station_name, station_latitude, station_longitude, all route variables, entry, exit_only, vending, entrance_type, and ada columns, and convert the entry variable from character to a logical variable, now the dataset is 1868 * 20.   
+
+How many distinct stations are there?
+```{r}
+nyc_sub |> 
+  select(station_name, line) |> 
+  distinct()
+```
+There are totally 465 rows, thus, there are 465 distinct stations.
+
+How many stations are ADA compliant?
+```{r}
+nyc_sub |> 
+  filter(ada == TRUE) |> 
+  select(station_name, line) |> 
+  distinct()
+```
+There are totally 84 rows, thus, 84 distinct stations are ADA compliant.
+
+What proportion of station entrances / exits without vending allow entrance?
+```{r}
+nyc_sub |> 
+  filter(vending == "NO") |> 
+  pull(entry) |> 
+  mean()
+```
+The proportion of station entrances without vending allow entrance is about 0.377.
+
+Reformat data so that route number and route name are distinct variables.How many distinct stations serve the A train? Of the stations that serve the A train, how many are ADA compliant?
+```{r}
+nyc_sub |> 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") |> 
+  filter(route == "A") |> 
+  select(station_name, line) |> 
+  distinct()
+
+nyc_sub |> 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") |> 
+  filter(route == "A", ada == TRUE) |> 
+  select(station_name, line) |> 
+  distinct()
+
+```
+60 distinct stations serve the A train, and 17 stations that serve the A train are ADA compliant.
+
+
