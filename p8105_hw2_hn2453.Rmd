@@ -160,7 +160,63 @@ cigarette_gwy
 The total number of cigarette butts collected by Gwynnda in June of 2022 is `r cigarette_gwy`.
 
 ## problem 3
+
+Import and create three data sets from three different excels. 
 ```{r}
+bake = 
+  read_csv("data/gbb_datasets/bakes.csv", 
+                      col_names = TRUE,
+                      show_col_types = FALSE,
+                      na = c("","NA","N/A")) |> 
+  janitor::clean_names() 
+
+head(bake)
+
+baker = 
+  read_csv("data/gbb_datasets/bakers.csv", 
+                      col_names = TRUE,
+                      show_col_types = FALSE,
+                      na = c("","NA","N/A")) |> 
+  janitor::clean_names() 
+
+head(baker)
+
+result = 
+  read_csv("data/gbb_datasets/results.csv", 
+                      col_names = TRUE,
+                      show_col_types = FALSE,
+                      skip = 2,
+                      na = c("","NA","N/A")) |> 
+  janitor::clean_names() 
+
+head(result)
 
 ```
+Finding the baker name in bakes.csv and results.csv is just first name, but the baker name in bakers.csv is full name. We need create a new variable for baker dataset in order to combine three data sets together. 
+```{r}
+baker$baker <- sapply(strsplit(baker$baker_name, " "), `[`, 1)
+head(baker)
+```
+
+Create a single, well-organized dataset with all the information contained in these data sets.
+```{r}
+bake_result = full_join(bake, result, by = c("series","episode","baker"))
+
+bake_total = full_join(bake_result, baker, by = c("baker","series"))
+bake_total
+
+```
+Check the completeness of the final dataset.
+```{r}
+bake_na = anti_join(bake, bake_total, by = c("series","episode","baker"))
+bake_na
+
+baker_na = anti_join(baker, bake_total, by = c("series","baker"))
+baker_na
+
+result_na = anti_join(result, bake_total, by = c("series","episode","baker"))
+result_na
+```
+All three datasets are null, thus, the completeness no problem. 
+
 
