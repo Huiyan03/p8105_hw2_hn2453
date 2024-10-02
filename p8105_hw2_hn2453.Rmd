@@ -93,4 +93,29 @@ mr_trash =
   
  head(mr_trash)
 ```
+Use a similar process to import, clean, and organize the data for Professor Trash Wheel and Gwynnda.
+```{r}
+pro_trash = 
+  read_excel("data/202409 Trash Wheel Collection Data.xlsx", 
+                      sheet = "Professor Trash Wheel",
+                      col_names = TRUE,
+                      skip = 1,
+                      na = c("","NA")) |> 
+  janitor::clean_names() |>
+  filter(!is.na(dumpster))
+  
+ head(pro_trash)
+```
+```{r}
+gwy_trash = 
+  read_excel("data/202409 Trash Wheel Collection Data.xlsx", 
+                      sheet = "Gwynnda Trash Wheel",
+                      col_names = TRUE,
+                      skip = 1,
+                      na = c("","NA")) |> 
+  janitor::clean_names() |>
+  filter(!is.na(dumpster))
+
+head(gwy_trash)
+```
 
