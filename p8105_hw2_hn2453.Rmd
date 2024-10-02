@@ -134,7 +134,32 @@ mr_trash$year = as.numeric(mr_trash$year)
 trash_wheel = bind_rows(mr_trash,pro_trash,gwy_trash)
 trash_wheel
 ```
+From the tibble, we have 1033 rows, and 15 variables: dumpster, month, year, date, weight_tons, volume_cubic_yard, plastic_bottles, polystyrene, cigarette_butts, glass_bottles, plastic_bags, wrappers, sports_balls, homes_powered, and wheel_name. 
 
+What was the total weight of trash collected by Professor Trash Wheel?
+```{r}
+weight_pro = trash_wheel |> 
+  filter(wheel_name == "Professor Trash Wheel") |> 
+  pull(weight_tons) |> 
+  sum(na.rm=TRUE)
+```
+
+The total weight of trash collected by Professor Trash Wheel is `r weight_pro` tons. 
+
+What was the total number of cigarette butts collected by Gwynnda in June of 2022?
+```{r}
+cigarette_gwy = trash_wheel |>
+  filter(wheel_name == "Gwynnda Trash Wheel") |>
+  filter(month == "June") |>
+  filter(year == "2022") |>
+  pull(cigarette_butts) |>
+  sum(na.rm=TRUE)
+
+cigarette_gwy
+```
+The total number of cigarette butts collected by Gwynnda in June of 2022 is `r cigarette_gwy`.
+
+## problem 3
 ```{r}
 
 ```
