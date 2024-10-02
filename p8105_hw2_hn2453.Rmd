@@ -10,6 +10,7 @@ output: github_document
 ```{r}
 library(tidyverse)
 library(readxl)
+library(readr)
 ```
 
 Import the data related to each entrance and exit for each subway station in NYC.
@@ -218,5 +219,19 @@ result_na = anti_join(result, bake_total, by = c("series","episode","baker"))
 result_na
 ```
 All three datasets are null, thus, the completeness no problem. 
+
+Check the correctness of the final dataset.
+```{r}
+bake_total |> filter(series =="1",episode == "2",baker=="Edd")
+```
+By checking from three original excel, the information is correct, the correctness no problem.
+
+The series and episode in final dataset are increasing order. This is easy for read and find.   
+
+Export the result as a CSV in the directory containing the original datasets.
+```{r}
+write.csv(bake_total, file = "data/gbb_datasets/bake_total.csv", row.names = FALSE)
+```
+
 
 
