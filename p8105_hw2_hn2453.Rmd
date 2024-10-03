@@ -243,9 +243,42 @@ result_5_to_10
 ```
 From the table, we can get every episodes from 1 to 9 have one star baker, and the final winner for each series will uncover in episode 10. I think the final winner is unpredictable according to this table. For example, in series 10, Steph got 4 times star baker, but the final winner is David who haven't get any star baker before episode 10 in this series. 
 
-
+Import, clean, tidy, and organize the viewership data in viewers.csv
 ```{r}
+viewer = 
+  read_csv("data/gbb_datasets/viewers.csv", 
+                      col_names = TRUE,
+                      show_col_types = FALSE,
+                      na = c("","NA","N/A")) |> 
+  janitor::clean_names() 
 
 ```
 
+Show the first 10 rows of this dataset.
+```{r}
+head(viewer,10)
+```
 
+What was the average viewership in Season 1? 
+```{r}
+season_1 = viewer |> 
+  filter(episode == "1")|>
+  select(starts_with("series"))
+
+season_1
+
+season_1_mean = mean(as.numeric(unlist(season_1)))
+```
+The average viewership in Season 1 is `r season_1_mean `
+
+In Season 5?
+```{r}
+season_5 = viewer |> 
+  filter(episode == "5")|>
+  select(starts_with("series"))
+
+season_5
+
+season_5_mean = mean(as.numeric(unlist(season_5)))
+```
+The average viewership in Season 5 is `r season_5_mean `
