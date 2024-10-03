@@ -233,5 +233,19 @@ Export the result as a CSV in the directory containing the original datasets.
 write.csv(bake_total, file = "data/gbb_datasets/bake_total.csv", row.names = FALSE)
 ```
 
+Create a reader-friendly table showing the star baker or winner of each episode in Seasons 5 through 10.
+```{r}
+result_5_to_10 = result |> 
+  filter(4 < series & series < 11) |>
+  filter(result %in% c("WINNER","STAR BAKER"))
+
+result_5_to_10
+```
+From the table, we can get every episodes from 1 to 9 have one star baker, and the final winner for each series will uncover in episode 10. I think the final winner is unpredictable according to this table. For example, in series 10, Steph got 4 times star baker, but the final winner is David who haven't get any star baker before episode 10 in this series. 
+
+
+```{r}
+
+```
 
 
